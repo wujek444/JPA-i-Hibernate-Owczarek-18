@@ -16,9 +16,6 @@ public class Employee {
 	private String firstName;
 	private String lastName;
 	private double salary;
-	@OneToOne
-	@JoinColumn(name = "addressId")
-	Address address;
 
 	public long getId() {
 		return id;
@@ -52,11 +49,4 @@ public class Employee {
 		this.salary = salary;
 	}
 
-	public Address getAddress() {
-		return address;
-	}
-
-	public void setAddress(Address address) {
-		this.address = address;
-	}
 }

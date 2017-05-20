@@ -1,5 +1,2 @@
-aby powiązać ze sobą dwie encje (mamy w klasie Employee, która jest encją, referencję do instancji
-klasy Address, która także jest encją. w takim przypadku nad referencją dodajemy adnotację:
-@OneToOne, bez żadnego klucza obcego -> Hibernate wygeneruje go sam, wnioskując po klasie referencji
-aby zmienić nazwę kolumny z kluczem obcym nad referencją należy umieścić adnotację:
-@JoinColumn(name = "klucz_obcy")
+UWAGA!!!!!!!!!!!!!!!!!!!!!!!!!!!
+wszelkie zapisania do bazy oraz modyfikacje muszą odbywać się w ramach transakcji!!
