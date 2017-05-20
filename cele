@@ -1,0 +1,11 @@
+Aby umieścić pola z klasy w dwóch tabelach korzystamy z dwóch adnotacji:
+-@Table(name = "")
+-@SecondaryTable(name = "")
+
+pola które będą w głównej tabeli zostawiamy w spokoju, ale pola które mają być w pobocznej tabeli
+musimy oznaczyć adnotacją @Column(table = "nazwa_tabeli_pobocznej") -> domyślnie pola mają adnotację
+@Column(table = "nazwa_tabeli_głównej")
+
+żeby nadać własną nazwę kolumnie z id przy rozdzielaniu tabel, do adnotacji dopisujemy atrybut
+pkJoinColumns:
+@SecondaryTable(name = "Adresy", pkJoinColumns = @PrimaryKeyJoinColumn(name = "employeeId"))
