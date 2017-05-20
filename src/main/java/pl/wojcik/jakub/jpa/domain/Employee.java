@@ -1,38 +1,25 @@
 package pl.wojcik.jakub.jpa.domain;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
 @Entity
-@Table(name = "Pracownicy1")
 public class Employee {
+
 	@Id
 	@GeneratedValue
 	private long id;
-
-	@Column(name = "Imię")
-	private String firstName;
-	@Column(name = "Nazwisko")
-	private String lastName;
-	@Column(name = "Pensja", nullable = true)
-	private double salary;
-
-	@Embedded
-	//@Column(name = "Adres") //tego nie można -> to wykrzaczy program; trzeba tak:
-	@AttributeOverrides({
-		@AttributeOverride(name = "locality", column = @Column(name = "Miasto")),
-		@AttributeOverride(name = "zipCode", column = @Column(name = "Kod_pocztowy")),
-		@AttributeOverride(name = "street", column = @Column(name = "Ulica")),
-		@AttributeOverride(name = "streetNumber", column = @Column(name = "Nr_ulicy"))
-	})
-	private Address address;
 	
+	private String firstName;
+	private String lastName;
+	private double salary;
+	@OneToOne
+	@JoinColumn(name = "addressId")
+	Address address;
+
 	public long getId() {
 		return id;
 	}
@@ -72,7 +59,4 @@ public class Employee {
 	public void setAddress(Address address) {
 		this.address = address;
 	}
-
-
-
 }

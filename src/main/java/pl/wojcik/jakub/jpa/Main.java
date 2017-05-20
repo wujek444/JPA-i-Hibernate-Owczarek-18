@@ -12,23 +12,26 @@ public class Main {
 	public static void main(String[] args) {
 		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("myDatabase");
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
-		
+
 		Employee employee = new Employee();
-		employee.setFirstName("Sylwia");
-		employee.setLastName("Drwal");
-		employee.setSalary(4000.0);
+		employee.setFirstName("Paweł");
+		employee.setLastName("Wojtaszko");
+		employee.setSalary(3000.0);
 		
 		Address address = new Address();
-		address.setLocality("Świdnik");
-		address.setStreet("Kosynierów");
-		address.setZipCode("21-040");
-		address.setStreetNumber(5);
+		address.setLocality("Lublin");
+		address.setStreet("Nadbystrzycka");
+		address.setZipCode("21-030");
+		address.setStreetNumber(9);
 		
 		employee.setAddress(address);
+		
 		entityManager.getTransaction().begin();
+		//trzeba zapisać zarówno pracownika jak i sam adres!!! -> oddzielne encje
+		entityManager.persist(address);
 		entityManager.persist(employee);
 		entityManager.getTransaction().commit();
-		
+
 		entityManager.close();
 		entityManagerFactory.close();
 	}

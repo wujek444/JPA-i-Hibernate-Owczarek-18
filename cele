@@ -1,16 +1,5 @@
-Jeżeli chcemy wydzielić oddzielną klasę z pól składowych innej klasy to:
-refactor -> extract class -> wybieramy pola z których stworzymy klasę, jej nazwę 
-oraz nazwę pola w klasie bazowej, które będzie przechowywało informacje zawarte w nowej klasie
-
-aby skorzystać z nowo utworzonej klasy w naszej encji Employee, należy nad nią dodać adnotację
-@Embeddable, a nad referencją do instancji Address w klasie Employee dodajemy adnotację
-@Embedded  -> wtedy stworzy nam się w bazie jedna tabela, ale w kodzie będzie rozbita na dwie klasy
-
-aby skonfigurować nazwy kolumn klasy osadzonej, należy w klasie w której jest referencja do 
-instancji klasy osadzonej, nad instancją dodać adnotację:
-@AttributeOverrides({
-		@AttributeOverride(name = "locality", column = @Column(name = "Miasto")),
-		@AttributeOverride(name = "zipCode", column = @Column(name = "Kod_pocztowy")),
-		@AttributeOverride(name = "street", column = @Column(name = "Ulica")),
-		@AttributeOverride(name = "streetNumber", column = @Column(name = "Nr_ulicy"))
-	})
+aby powiązać ze sobą dwie encje (mamy w klasie Employee, która jest encją, referencję do instancji
+klasy Address, która także jest encją. w takim przypadku nad referencją dodajemy adnotację:
+@OneToOne, bez żadnego klucza obcego -> Hibernate wygeneruje go sam, wnioskując po klasie referencji
+aby zmienić nazwę kolumny z kluczem obcym nad referencją należy umieścić adnotację:
+@JoinColumn(name = "klucz_obcy")

@@ -1,20 +1,27 @@
 package pl.wojcik.jakub.jpa.domain;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
-@Embeddable
+@Entity
 public class Address {
+
+	@Id
+	@GeneratedValue
+	private long id;
+	
 	private String locality;
 	private String zipCode;
 	private String street;
 	private int streetNumber;
-	
 
+	public long getId() {
+		return id;
+	}
 
-	public Address() {
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public String getLocality() {
@@ -49,5 +56,4 @@ public class Address {
 		this.streetNumber = streetNumber;
 	}
 	
-
 }
