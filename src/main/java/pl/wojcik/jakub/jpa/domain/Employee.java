@@ -1,80 +1,38 @@
 package pl.wojcik.jakub.jpa.domain;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.SecondaryTable;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "Pracownicy")
-@SecondaryTable(name = "Adresy", pkJoinColumns = @PrimaryKeyJoinColumn(name = "employeeId"))
+@Table(name = "Pracownicy1")
 public class Employee {
-	// wrzucamy do tabeli "pracownicy"
 	@Id
 	@GeneratedValue
 	private long id;
 
-	@Column(name = "imie")
+	@Column(name = "Imię")
 	private String firstName;
-
-	@Column(name = "nazwisko")
+	@Column(name = "Nazwisko")
 	private String lastName;
-
-	@Column(name = "pensja")
+	@Column(name = "Pensja", nullable = true)
 	private double salary;
 
-	public Employee() {
-		super();
-	}
-
-	// wrzucamy do tabeli "adres"
-	@Column(table = "Adresy", name = "miejsce_zamieszkania")
-	private String locality;
-
-	@Column(table = "Adresy", name = "kod_pocztowy")
-	private String zipCode;
-
-	@Column(table = "Adresy", name = "ulica")
-	private String street;
-
-	@Column(table = "Adresy", name = "nr_ulicy")
-	private int streetNumber;
-
-	public String getLocality() {
-		return locality;
-	}
-
-	public void setLocality(String locality) {
-		this.locality = locality;
-	}
-
-	public String getZipCode() {
-		return zipCode;
-	}
-
-	public void setZipCode(String zipCode) {
-		this.zipCode = zipCode;
-	}
-
-	public String getStreet() {
-		return street;
-	}
-
-	public void setStreet(String street) {
-		this.street = street;
-	}
-
-	public int getStreetNumber() {
-		return streetNumber;
-	}
-
-	public void setStreetNumber(int streetNumber) {
-		this.streetNumber = streetNumber;
-	}
-
+	@Embedded
+	//@Column(name = "Adres") //tego nie można -> to wykrzaczy program; trzeba tak:
+	@AttributeOverrides({
+		@AttributeOverride(name = "locality", column = @Column(name = "Miasto")),
+		@AttributeOverride(name = "zipCode", column = @Column(name = "Kod_pocztowy")),
+		@AttributeOverride(name = "street", column = @Column(name = "Ulica")),
+		@AttributeOverride(name = "streetNumber", column = @Column(name = "Nr_ulicy"))
+	})
+	private Address address;
+	
 	public long getId() {
 		return id;
 	}
@@ -106,5 +64,15 @@ public class Employee {
 	public void setSalary(double salary) {
 		this.salary = salary;
 	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+
+
 
 }

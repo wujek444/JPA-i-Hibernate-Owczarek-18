@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import pl.wojcik.jakub.jpa.domain.Address;
 import pl.wojcik.jakub.jpa.domain.Employee;
 
 public class Main {
@@ -13,14 +14,17 @@ public class Main {
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
 		
 		Employee employee = new Employee();
-		employee.setFirstName("Jakub");
-		employee.setLastName("Wójcik");
-		employee.setSalary(3000.0);
-		employee.setLocality("Świdnik");
-		employee.setZipCode("21-040");
-		employee.setStreet("Spadochroniarzy");
-		employee.setStreetNumber(1);
+		employee.setFirstName("Sylwia");
+		employee.setLastName("Drwal");
+		employee.setSalary(4000.0);
 		
+		Address address = new Address();
+		address.setLocality("Świdnik");
+		address.setStreet("Kosynierów");
+		address.setZipCode("21-040");
+		address.setStreetNumber(5);
+		
+		employee.setAddress(address);
 		entityManager.getTransaction().begin();
 		entityManager.persist(employee);
 		entityManager.getTransaction().commit();
