@@ -10,7 +10,7 @@
 			<property name="javax.persistence.jdbc.password" value="admin" />
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3307/mojabaza" />
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect" />
-			<!-- trzeba usunąć, bo usunie cały schemat bazy razem z triggerami <property name="hibernate.hbm2ddl.auto" value="create" /> -->
+			<property name="hibernate.hbm2ddl.auto" value="create" />
 		</properties>
 	</persistence-unit>
 </persistence>

@@ -12,27 +12,21 @@ public class Main {
 
 		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("myDatabase");
 		EntityManager entityManager = entityManagerFactory.createEntityManager();
-		
+
 		Employee employee = new Employee();
 		employee.setFirstName("Jakub");
 		employee.setLastName("Wójcik");
 		employee.setSalary(4000.0);
 		
+		//transakcja 1 - dodawanie
 		entityManager.getTransaction().begin();
 		entityManager.persist(employee);
 		entityManager.getTransaction().commit();
 		
-		System.out.println("First name: " + employee.getFirstName());
-		System.out.println("Last name: " + employee.getLastName());
-		System.out.println("Salary: " + employee.getSalary());
-		System.out.println("Tax: " + employee.getTax()); //nie pokaże działania triggera
-		
-		entityManager.refresh(employee); //pobranie aktualnego obiektu z bazy
-		
-		System.out.println("First name: " + employee.getFirstName());
-		System.out.println("Last name: " + employee.getLastName());
-		System.out.println("Salary: " + employee.getSalary());
-		System.out.println("Tax: " + employee.getTax()); //teraz już pokaże działanie triggera
+		//transakcja 2 - usuwanie
+		entityManager.getTransaction().begin();
+		entityManager.remove(employee);
+		entityManager.getTransaction().commit();
 		
 		entityManager.close();
 		entityManagerFactory.close();

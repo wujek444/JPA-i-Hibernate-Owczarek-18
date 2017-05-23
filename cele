@@ -1,15 +1,14 @@
-o triggerach (wyzwalaczach) 
+chcemy utworzyć i usunąć pracownika
 
-TRIGGER - funkcja w bazie danych, która jest odpalana za każdym razie gdy coś się w tej bazie 
-zadzieje
+skorzystamy z debuggera, żeby zobaczyć co się działo z pracownikiem
+usuwamy obiekt z bazy wewnątrz transakcji za pomocą metody 
+entityManager.remove(employee); -> podajemy referencję obiektu do usunięcia
 
-tutaj -> za każdym razem gdy dodamy do bazy nowego pracownika, to automatycznie ma się obliczyć 
-dla niego pole "tax" (na podstawie salary)
+UWAGA!!!!
+do referencji możemy przypisać instancję, wyszukując instancji w bazie za pomocą metody
+entityManager.find(Klasa.class, long idL); ->! to też trzeba wykonać w ramach transakcji!
 
-create trigger calculate_tax             //calculate_tax - nazwa triggera
-before insert on employee for each row	 //przed dodaniem nowego wiersza w tabeli employee, dla każdego wiersza
-set new.`tax` = new.`salary` * 0.20;	 //ustaw (new to alias nowo utworzonego wiersza) 
-
-UWAGA!
-żeby działanie triggera w bazie było widoczne w JPA należy odświeżyć obiekt (pobrać go z bazy
-jeszcze raz -> poprzez metodę entityManager.refresh(employee); )
+ustawiamy breakpointy (podwójne kliknięcie na numer linii) przy transakcjach, żeby zobaczyć
+po kolei przebieg programu -> wykonanie programu zatrzyma się przy breakpointach -> aby wznowić
+działanie programu naciskamy "Resume". po minięciu pierwszego breakpointu widzimy, że pracownik
+został dodany do bazy. natomiast po skończeniu programu widzimy, że pracownik został usunięty

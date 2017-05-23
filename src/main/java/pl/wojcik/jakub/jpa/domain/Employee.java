@@ -14,11 +14,7 @@ public class Employee {
 	private String firstName;
 	private String lastName;
 	private double salary;
-	private double tax;
 
-	public double getTax() { //nie ma settera, bo ustawianiem tego pola będzie zajmowała się BD
-		return tax;
-	}
 
 	public long getId() {
 		return id;
