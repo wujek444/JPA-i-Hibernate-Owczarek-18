@@ -1,2 +1,15 @@
-UWAGA!!!!!!!!!!!!!!!!!!!!!!!!!!!
-wszelkie zapisania do bazy oraz modyfikacje muszą odbywać się w ramach transakcji!!
+o triggerach (wyzwalaczach) 
+
+TRIGGER - funkcja w bazie danych, która jest odpalana za każdym razie gdy coś się w tej bazie 
+zadzieje
+
+tutaj -> za każdym razem gdy dodamy do bazy nowego pracownika, to automatycznie ma się obliczyć 
+dla niego pole "tax" (na podstawie salary)
+
+create trigger calculate_tax             //calculate_tax - nazwa triggera
+before insert on employee for each row	 //przed dodaniem nowego wiersza w tabeli employee, dla każdego wiersza
+set new.`tax` = new.`salary` * 0.20;	 //ustaw (new to alias nowo utworzonego wiersza) 
+
+UWAGA!
+żeby działanie triggera w bazie było widoczne w JPA należy odświeżyć obiekt (pobrać go z bazy
+jeszcze raz -> poprzez metodę entityManager.refresh(employee); )
