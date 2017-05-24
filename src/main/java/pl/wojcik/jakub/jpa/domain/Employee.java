@@ -1,5 +1,6 @@
 package pl.wojcik.jakub.jpa.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -9,12 +10,22 @@ public class Employee {
 
 	@Id
 	@GeneratedValue
+	@Column(name = "Id")
 	private long id;
 
+	@Column(name = "Imie")
 	private String firstName;
+	@Column(name = "Nazwisko")
 	private String lastName;
+	@Column(name = "Pensja")
 	private double salary;
 
+
+	@Override
+	public String toString() {
+		return "Employee [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", salary=" + salary
+				+ "]";
+	}
 
 	public long getId() {
 		return id;

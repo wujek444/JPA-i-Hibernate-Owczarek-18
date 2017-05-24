@@ -1,14 +1,35 @@
-chcemy utworzyć i usunąć pracownika
+JPQL -> Java Persistence Query Language
+pozwala na bardziej intuicyjne i uniwersalne pobieranie z bazy, pozwala na napisanie złożonych zapytań
 
-skorzystamy z debuggera, żeby zobaczyć co się działo z pracownikiem
-usuwamy obiekt z bazy wewnątrz transakcji za pomocą metody 
-entityManager.remove(employee); -> podajemy referencję obiektu do usunięcia
+zapytania do bazy tworzymy za pomocą entityManagera:
 
-UWAGA!!!!
-do referencji możemy przypisać instancję, wyszukując instancji w bazie za pomocą metody
-entityManager.find(Klasa.class, long idL); ->! to też trzeba wykonać w ramach transakcji!
+entityManager.createQuery(String query, Class klasaZwracanegoObiektu);
 
-ustawiamy breakpointy (podwójne kliknięcie na numer linii) przy transakcjach, żeby zobaczyć
-po kolei przebieg programu -> wykonanie programu zatrzyma się przy breakpointach -> aby wznowić
-działanie programu naciskamy "Resume". po minięciu pierwszego breakpointu widzimy, że pracownik
-został dodany do bazy. natomiast po skończeniu programu widzimy, że pracownik został usunięty
+konkretne użycie metody:
+entityManager.createQuery("select e from Employee e where e.lastName = 'Pająk'", Employee.class);
+JPQL przypomina SQL'a:
+select - wybierz
+e - alias pracownika (wybieramy całego pracownika)
+from Employee e - z tabeli Employee, której nadajemy alias 'e'
+where e.lastName = 'Pająk' - gdzie nazwisko pracownika = Pająk
+
+----------------UWAGA!!!--------------------------------------
+PISZĄC ZAPYTANIA MUSIMY POSŁUGIWAĆ SIĘ NAZWAMI PÓL KLASY, A NIE WARTOŚCIAMI PODANYMI 
+PRZY @Column(name = "cośtam"), bo inaczej nie zadziała
+--------------------------------------------------------------
+
+otrzymane zapytanie będzie typu TypedQuery<Employee>, które informuje nas o typie zwracanego obiektu
+
+gdy już stworzymy zapytanie, to możemy coś z niego "wyciągnąć":
+wyniki zapytania pobieramy na dwa sposoby:
+1. gdy zapytanie zwróci jeden wynik, to dobieramy się do niego za pomocą metody
+query.getSingleResult(); -> w tym przypadku wynik będzie typu Employee
+2. gdy zapytanie zwraca wiele wyników, to używamy metody
+query.getResultList();, która zwraca listę obiektów (typu Employee) 
+
+możemy także korzystać z nietypowanego zapytania, które zwróci nam obiekt(y) typu Object:
+entityManager.createQuery(String query);
+
+w JPQL istnieje funkcja concate(e.firstName, ' ', e.lastName), która służy do łaczenie stringów
+(można używać w select concat()), na wybieranych kolumnach można wykonywać operacje arytmetyczne:
+select x.a, x.b * 0.2 from X x 
