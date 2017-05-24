@@ -1,4 +1,8 @@
 JPQL -> Java Persistence Query Language
+--------UWAGA!!!----------------------
+pisanie zapytań w języku JPQL jest niezbyt bezpieczne od strony programistycznej (rezultaty zapytań są
+niekoniecznie przewidywalne)
+------------------------------------
 pozwala na bardziej intuicyjne i uniwersalne pobieranie z bazy, pozwala na napisanie złożonych zapytań
 
 zapytania do bazy tworzymy za pomocą entityManagera:
