@@ -1,39 +1,34 @@
-JPQL -> Java Persistence Query Language
---------UWAGA!!!----------------------
-pisanie zapytań w języku JPQL jest niezbyt bezpieczne od strony programistycznej (rezultaty zapytań są
-niekoniecznie przewidywalne)
-------------------------------------
-pozwala na bardziej intuicyjne i uniwersalne pobieranie z bazy, pozwala na napisanie złożonych zapytań
+istnieje inna, LEPSZA metoda pisania "zapytań", gdzie nie musimy na sztywno pisać zapytań poprzez konkatenacje,
+podawanie parametrów w stringu itp.
 
-zapytania do bazy tworzymy za pomocą entityManagera:
+----------------------PARAMETRY NAZYWANE---------------------------------------------------------------
+w zapytaniu możemy używać zmiennych parametrów, które wypisujemy: ":nazwaParametru", a następnie musimy
+ustawić nazwę parametru i jego wartość w zapytaniu:
+query.setParameter("nazwaParametru", wartoscParametru);
+-------------------------------------------------------------------------------------------------------
 
-entityManager.createQuery(String query, Class klasaZwracanegoObiektu);
+-----------------------PARAMETRY PRZEKAZYWANE PRZEZ INDEKS---------------------------------------------
+TypedQuery<Employee> queryWithIndexParameter = entityManager
+				.createQuery("select e from Employee e where e.salary > ?1 and e.salary < ?2", Employee.class);
+		//trzeba uważać na typy liczb!!!:
+		queryWithIndexParameter.setParameter(1, 2000.0);
+		queryWithIndexParameter.setParameter(2, 3000.0);
+		
+Różnica jest taka, że zamiast nazwy mamy indeks. I tyle.
+-------------------------------------------------------------------------------------------------------
 
-konkretne użycie metody:
-entityManager.createQuery("select e from Employee e where e.lastName = 'Pająk'", Employee.class);
-JPQL przypomina SQL'a:
-select - wybierz
-e - alias pracownika (wybieramy całego pracownika)
-from Employee e - z tabeli Employee, której nadajemy alias 'e'
-where e.lastName = 'Pająk' - gdzie nazwisko pracownika = Pająk
-
-----------------UWAGA!!!--------------------------------------
-PISZĄC ZAPYTANIA MUSIMY POSŁUGIWAĆ SIĘ NAZWAMI PÓL KLASY, A NIE WARTOŚCIAMI PODANYMI 
-PRZY @Column(name = "cośtam"), bo inaczej nie zadziała
---------------------------------------------------------------
-
-otrzymane zapytanie będzie typu TypedQuery<Employee>, które informuje nas o typie zwracanego obiektu
-
-gdy już stworzymy zapytanie, to możemy coś z niego "wyciągnąć":
-wyniki zapytania pobieramy na dwa sposoby:
-1. gdy zapytanie zwróci jeden wynik, to dobieramy się do niego za pomocą metody
-query.getSingleResult(); -> w tym przypadku wynik będzie typu Employee
-2. gdy zapytanie zwraca wiele wyników, to używamy metody
-query.getResultList();, która zwraca listę obiektów (typu Employee) 
-
-możemy także korzystać z nietypowanego zapytania, które zwróci nam obiekt(y) typu Object:
-entityManager.createQuery(String query);
-
-w JPQL istnieje funkcja concate(e.firstName, ' ', e.lastName), która służy do łaczenie stringów
-(można używać w select concat()), na wybieranych kolumnach można wykonywać operacje arytmetyczne:
-select x.a, x.b * 0.2 from X x 
+-------------------------ZAPYTANIE Z LISTĄ (COŚ IN LISTA)-------------------------------------------------------------
+//zapytanie z listą (parametr 'names' będzie listą, przechowującą nazwiska):
+		TypedQuery<Employee> queryWithList = entityManager
+				.createQuery("select e from Employee e where e.lastName in :names", Employee.class);
+		List<String> names = new ArrayList<>();
+		names.add("Mateusiak");
+		names.add("Bednarek");
+		queryWithList.setParameter("names", names); //podajemy listę nazwisk jako parametr
+		queryWithList.getResultList().forEach(System.out::println);
+		
+Listę możemy spokojnie podać jako parametr.
+-----------------------------------------------------------------------------------------------------
+WADY JPQL!:
+- problemy z typowaniem (musimy na sztywno określać typy - np. jeżeli kompilator oczekuje double'a,
+a dostanie wartość 3000, to zacznie krzyczeć, bo trzeba na sztywno określić 3000.0)

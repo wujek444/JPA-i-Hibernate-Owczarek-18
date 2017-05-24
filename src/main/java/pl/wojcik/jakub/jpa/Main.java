@@ -1,5 +1,6 @@
 package pl.wojcik.jakub.jpa;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
@@ -23,43 +24,44 @@ public class Main {
 		entityManager = entityManagerFactory.createEntityManager();
 
 		addEmployees();
-		// //budujemy zapytanie z użyciem EntityManagera
-		// TypedQuery<Employee> query = entityManager.createQuery("select e from
-		// Employee e where e.lastName = 'Pająk'", Employee.class);
-		// //wiemy, że zapytanie to zwróci jednego pracownika, więc korzystamy z
-		// metody:
-		// Employee singleEmployee = query.getSingleResult();
-		// System.out.println(singleEmployee);
+		// tutaj jest przykład zapytania tworzonego "na sztywno" (3000 jest
+		// niezmienne)
+		// String queryText = "SELECT e FROM Employee e WHERE e.salary >
+		// 3000.0";
 
-		// //teraz budujemy zapytanie, które zwróci większą liczbę wyników:
-		// TypedQuery<Employee> multipleResultsQuery =
-		// entityManager.createQuery("SELECT e FROM Employee e WHERE e.lastName
-		// = 'Mateusiak'", Employee.class);
-		// List<Employee> resultList = multipleResultsQuery.getResultList();
-		// resultList.forEach(x -> System.out.println(x));
+		// tutaj mamy zapytanie z wykorzystaniem parametru nazywanego minSalary:
+		// wykonanie zapytania:
+		TypedQuery<Employee> query = entityManager.createQuery("SELECT e FROM Employee e WHERE e.salary > :minSalary",
+				Employee.class);
+		// ustawienie parametru minSalary:
+		query.setParameter("minSalary", 5000.0);
 
-		// Scanner scanner = new Scanner(System.in);
-		// System.out.println("Podaj nazwisko: ");
-		// String userIn = scanner.nextLine();
-		// //budujemy następne zapytanie z większą ilością rezultatów:
-		// entityManager.createQuery("SELECT e.firstName FROM Employee e WHERE
-		// e.lastName = '"+ userIn + "'", String.class)
-		// .getResultList().forEach(x -> System.out.println(x));
+		// pobranie i wyświetlenie wyników zapytania:
+		List<Employee> resultList = query.getResultList();
+		resultList.forEach(x -> System.out.println(x));
+		System.out.println("111111111111111111111111111111111111111111111111111111111111");
 
-		// korzystamy teraz z zapytania nietypowanego: UWAGA -> NIEBEZPIECZNE PODEJŚCIE!
-		Query query = entityManager
-				.createQuery("select concat(e.firstName, ' ', e.lastName), e.salary * 0.2 from Employee e ");
-		// aby przemieszczać się po elementach listy wynikowej potrzebujemy
-		// iteratora listy:
-		Iterator<?> iterator = query.getResultList().iterator(); //iterator nie wie co będzie zwracał
-		while (iterator.hasNext()) {
-			Object[] item = (Object[]) iterator.next();
-			String name = (String) item[0];
-			double tax = (double) item[1];
-			System.out.println(name + "has to pay " + tax);
-
-		}
-
+		// tutaj wykorzystamy zapytanie z parametrem indeksowanym (?1 i ?2 to
+		// indeksy):
+		TypedQuery<Employee> queryWithIndexParameter = entityManager
+				.createQuery("select e from Employee e where e.salary > ?1 and e.salary < ?2", Employee.class);
+		//trzeba uważać na typy liczb!!!:
+		queryWithIndexParameter.setParameter(1, 2000.0);
+		queryWithIndexParameter.setParameter(2, 3000.0);
+		
+		List<Employee> resultList2 = queryWithIndexParameter.getResultList();
+		resultList2.forEach(x -> System.out.println(x));
+		
+		System.out.println("22222222222222222222222222222222222222222222222222222222222222");
+		//zapytanie z listą (parametr 'names' będzie listą, przechowującą nazwiska):
+		TypedQuery<Employee> queryWithList = entityManager
+				.createQuery("select e from Employee e where e.lastName in :names", Employee.class);
+		List<String> names = new ArrayList<>();
+		names.add("Mateusiak");
+		names.add("Bednarek");
+		queryWithList.setParameter("names", names); //podajemy listę nazwisk jako parametr
+		queryWithList.getResultList().forEach(System.out::println);
+		
 		entityManager.close();
 		entityManagerFactory.close();
 	}
